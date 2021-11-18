@@ -1,14 +1,13 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-
-import { DateScalar } from "./scalars/date.scalar";
+import { TestResolver } from "./resolvers/test.resolver";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forFeature([]),
   ],
-  providers: [DateScalar],
+  providers: [TestResolver],
 })
 export class GQLModule {}

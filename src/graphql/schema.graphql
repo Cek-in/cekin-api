@@ -1,9 +1,3 @@
-scalar Date
-
 type Query {
-
-}
-
-type Mutation {
- 
+  getHello: String!
 }
