@@ -7,6 +7,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { GraphQLModule } from "@nestjs/graphql";
 import { GQLModule } from "./graphql/graphql.module";
+import { Users } from "./db/entities/Users";
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { GQLModule } from "./graphql/graphql.module";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [Users],
       //synchronize: true,
     }),
     GraphQLModule.forRoot({

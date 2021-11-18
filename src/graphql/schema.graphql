@@ -1,3 +1,23 @@
 type Query {
   getHello: String!
+  users: [User]
+}
+
+type Mutation {
+  createUser(user: CreateUserInput): User
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String
+  userType: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  firebaseId: String!
 }
