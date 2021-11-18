@@ -1,0 +1,9 @@
+scalar Date
+
+type Query {
+
+}
+
+type Mutation {
+ 
+}
