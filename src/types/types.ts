@@ -3,3 +3,10 @@ export interface ICreateUser {
   lastName: string;
   firebaseId: string;
 }
+
+export interface IEditUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+}

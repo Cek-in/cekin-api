@@ -5,6 +5,7 @@ type Query {
 
 type Mutation {
   createUser(user: CreateUserInput): User
+  editUser(user: EditUserInput): User
 }
 
 type User {
@@ -20,4 +21,11 @@ input CreateUserInput {
   firstName: String!
   lastName: String!
   firebaseId: String!
+}
+
+input EditUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String
 }
