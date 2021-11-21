@@ -3,6 +3,7 @@ import { Logger, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "src/db/entities/Users";
+import { MailService } from "src/mails/mail.service";
 import { UserType } from "src/types/enums";
 import { ICreateUser, IEditUser } from "src/types/types";
 import { Repository } from "typeorm";
@@ -18,6 +19,7 @@ export class UserResolver {
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     private firebaseAuth: FirebaseAuthenticationService,
+    private mailService: MailService,
   ) {}
 
   @UseGuards(UserGuard)
@@ -85,6 +87,12 @@ export class UserResolver {
       newUser.userType = UserType.USER;
 
       const u = await this.usersRepository.save(newUser);
+
+      const confirmUrl = await this.firebaseAuth.generateEmailVerificationLink(
+        fbUser.email,
+      );
+
+      await this.mailService.sendConfirmationMail(u, confirmUrl);
       return u;
     } catch (err) {
       this.logger.error(err);

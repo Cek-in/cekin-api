@@ -8,6 +8,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { GraphQLModule } from "@nestjs/graphql";
 import { GQLModule } from "./graphql/graphql.module";
 import { Users } from "./db/entities/Users";
+import { MailModule } from "./mails/mail.module";
 
 @Module({
   imports: [
@@ -42,9 +43,11 @@ import { Users } from "./db/entities/Users";
           projectId: process.env.FB_PROJECT_ID,
           privateKey: process.env.FB_PRIVATE_KEY.replace(/\\n/g, "\n"),
           clientEmail: process.env.FB_CLIENT_EMAIL,
+          
         }),
       }),
     }),
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
