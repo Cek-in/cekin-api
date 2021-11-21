@@ -1,6 +1,6 @@
 type Query {
   getHello: String!
-  users: [User]
+  user: User
 }
 
 type Mutation {

@@ -20,6 +20,12 @@ export class UserResolver {
     private firebaseAuth: FirebaseAuthenticationService,
   ) {}
 
+  @UseGuards(UserGuard)
+  @Query("user")
+  async getUser(@User() user: Users): Promise<Users> {
+    return user;
+  }
+
   @UseGuards(FbUidGuard)
   @UseGuards(UserGuard)
   @Mutation("editUser")
