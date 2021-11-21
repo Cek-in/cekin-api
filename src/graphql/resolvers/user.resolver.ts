@@ -1,11 +1,14 @@
 import { FirebaseAuthenticationService } from "@aginix/nestjs-firebase-admin";
-import { Logger } from "@nestjs/common";
+import { Logger, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "src/db/entities/Users";
 import { UserType } from "src/types/enums";
 import { ICreateUser, IEditUser } from "src/types/types";
 import { Repository } from "typeorm";
+import { FbUID, User } from "../decorators/user.decorator";
+import { FbUidGuard } from "../guards/gql/fb-uid.guard";
+import { UserGuard } from "../guards/gql/user.guard";
 
 @Resolver("User")
 export class UserResolver {
@@ -17,10 +20,12 @@ export class UserResolver {
     private firebaseAuth: FirebaseAuthenticationService,
   ) {}
 
+  @UseGuards(FbUidGuard)
+  @UseGuards(UserGuard)
   @Mutation("editUser")
   async editUser(
-    @Args("user") user: Users,
-    updated: IEditUser,
+    @User() user: Users,
+    @Args("user") updated: IEditUser,
   ): Promise<Users> {
     if (!user) {
       throw Error("User was not found");
@@ -35,26 +40,31 @@ export class UserResolver {
       usr.lastName = lastName;
       usr.email = email;
       usr.phone = phone;
+
       await this.usersRepository.save(usr);
       return usr;
     }
 
-    return null;
+    throw Error("User was not found");
   }
 
+  @UseGuards(FbUidGuard)
   @Mutation("createUser")
-  async createUser(@Args("user") user: ICreateUser): Promise<Users> {
+  async createUser(
+    @Args("user") user: ICreateUser,
+    @FbUID() firebaseUid: string,
+  ): Promise<Users> {
     try {
-      const { firebaseId, firstName, lastName } = user;
+      const { firstName, lastName } = user;
 
-      const fbUser = await this.firebaseAuth.getUser(firebaseId);
+      const fbUser = await this.firebaseAuth.getUser(firebaseUid);
 
       if (!fbUser) {
         throw new Error("User not registered on firebase");
       }
 
       const userExists = await this.usersRepository.findOne({
-        where: { firebaseId },
+        where: { firebaseId: firebaseUid },
       });
 
       if (userExists) {
@@ -62,7 +72,7 @@ export class UserResolver {
       }
 
       const newUser = new Users();
-      newUser.firebaseId = firebaseId;
+      newUser.firebaseId = firebaseUid;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
       newUser.email = fbUser.email;
