@@ -42,7 +42,7 @@ export class FbUidGuard implements CanActivate {
           throw new UnauthorizedException("User not registered on Firebase");
         }
 
-        ctx.getContext().firebaseUID = userAuth.uid;
+        ctx.getContext().firebaseToken = userAuth.uid;
         return true;
       }
     } catch (error) {

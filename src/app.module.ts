@@ -9,6 +9,8 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { GQLModule } from "./graphql/graphql.module";
 import { Users } from "./db/entities/Users";
 import { MailModule } from "./mails/mail.module";
+import { Places } from "./db/entities/Places";
+import { CheckIns } from "./db/entities/CheckIn";
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { MailModule } from "./mails/mail.module";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Users],
+      entities: [Users, Places, CheckIns],
       //synchronize: true,
     }),
     GraphQLModule.forRoot({
@@ -43,7 +45,6 @@ import { MailModule } from "./mails/mail.module";
           projectId: process.env.FB_PROJECT_ID,
           privateKey: process.env.FB_PRIVATE_KEY.replace(/\\n/g, "\n"),
           clientEmail: process.env.FB_CLIENT_EMAIL,
-          
         }),
       }),
     }),

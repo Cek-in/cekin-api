@@ -1,11 +1,13 @@
 type Query {
   getHello: String!
   user: User
+  userCheckIns: [CheckIn]
 }
 
 type Mutation {
   createUser(user: CreateUserInput): User
   editUser(user: EditUserInput): User
+  checkIn: Boolean
 }
 
 type User {
@@ -15,6 +17,21 @@ type User {
   email: String!
   phone: String
   userType: String!
+  checkIns: [CheckIn]
+}
+
+type Place {
+  id: ID!
+  name: String!
+  checkIns: [CheckIn]
+}
+
+type CheckIn {
+  id: ID!
+  user: User!
+  place: Place!
+  checkInTime: String!
+  checkOutTime: String
 }
 
 input CreateUserInput {

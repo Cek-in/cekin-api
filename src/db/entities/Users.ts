@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { CheckIns } from "./CheckIn";
 
 @Entity("users")
 export class Users {
@@ -53,4 +54,7 @@ export class Users {
     nullable: false,
   })
   userType: string;
+
+  @OneToMany(() => CheckIns, (checkIn) => checkIn.userId)
+  checkIns: CheckIns[];
 }

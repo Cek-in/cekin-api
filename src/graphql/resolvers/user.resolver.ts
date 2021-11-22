@@ -1,7 +1,9 @@
 import { FirebaseAuthenticationService } from "@aginix/nestjs-firebase-admin";
 import { Logger, UseGuards } from "@nestjs/common";
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
+import { CheckIns } from "src/db/entities/CheckIn";
+import { Places } from "src/db/entities/Places";
 import { Users } from "src/db/entities/Users";
 import { MailService } from "src/mails/mail.service";
 import { UserType } from "src/types/enums";
@@ -18,6 +20,8 @@ export class UserResolver {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    @InjectRepository(CheckIns)
+    private readonly checkInsRepository: Repository<CheckIns>,
     private firebaseAuth: FirebaseAuthenticationService,
     private mailService: MailService,
   ) {}
@@ -56,6 +60,15 @@ export class UserResolver {
     throw Error("User was not found");
   }
 
+  @ResolveField("checkIns")
+  async checkIns(@User() user: Users): Promise<CheckIns[]> {
+    const checkIns = await this.checkInsRepository.find({
+      where: { userId: user.id },
+    });
+
+    return checkIns;
+  }
+
   @UseGuards(FbUidGuard)
   @Mutation("createUser")
   async createUser(
@@ -80,7 +93,7 @@ export class UserResolver {
       }
 
       const newUser = new Users();
-      newUser.firebaseId = firebaseUid;
+      newUser.firebaseId = fbUser.uid;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
       newUser.email = fbUser.email;
