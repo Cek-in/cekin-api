@@ -16,18 +16,12 @@ export class Users {
   id: number;
 
   @Column("varchar", {
-    name: "first_name",
-    nullable: false,
-    unique: false,
-    length: 50,
+    name: "forename",
   })
   firstName: string;
 
   @Column("varchar", {
-    name: "last_name",
-    nullable: false,
-    unique: false,
-    length: 50,
+    name: "surname",
   })
   lastName: string;
 
