@@ -53,8 +53,6 @@ export class UserGuard implements CanActivate {
           throw new UnauthorizedException("User not verified");
         }
 
-        userAuth.emailVerified = true;
-
         const user = await this.usersRepository.findOne({
           firebaseId: userAuth.uid,
         });
