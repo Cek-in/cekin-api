@@ -1,3 +1,4 @@
+import { LanguageType } from "src/types/types";
 import {
   Column,
   Entity,
@@ -57,4 +58,9 @@ export class Users {
 
   @OneToMany(() => CheckIns, (checkIn) => checkIn.userId)
   checkIns: CheckIns[];
+
+  @Column("varchar", {
+    name: "language",
+  })
+  language: LanguageType;
 }

@@ -37,6 +37,7 @@ type CheckIn {
 input CreateUserInput {
   firstName: String!
   lastName: String!
+  languageCode: String!
 }
 
 input EditUserInput {
@@ -44,4 +45,5 @@ input EditUserInput {
   lastName: String!
   email: String!
   phone: String
+  languageCode: String!
 }

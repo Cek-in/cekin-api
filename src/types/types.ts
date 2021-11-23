@@ -1,6 +1,7 @@
 export interface ICreateUser {
   firstName: string;
   lastName: string;
+  languageCode: LanguageType;
 }
 
 export interface IEditUser {
@@ -8,4 +9,7 @@ export interface IEditUser {
   lastName: string;
   email: string;
   phone?: string;
+  languageCode: LanguageType;
 }
+
+export type LanguageType = "en" | "cs" | string;

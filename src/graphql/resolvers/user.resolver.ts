@@ -76,7 +76,7 @@ export class UserResolver {
     @FbUID() firebaseUid: string,
   ): Promise<Users> {
     try {
-      const { firstName, lastName } = user;
+      const { firstName, lastName, languageCode } = user;
 
       const fbUser = await this.firebaseAuth.getUser(firebaseUid);
 
@@ -98,6 +98,7 @@ export class UserResolver {
       newUser.lastName = lastName;
       newUser.email = fbUser.email;
       newUser.userType = UserType.USER;
+      newUser.language = languageCode;
 
       const u = await this.usersRepository.save(newUser);
 
