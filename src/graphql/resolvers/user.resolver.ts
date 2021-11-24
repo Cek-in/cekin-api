@@ -76,6 +76,7 @@ export class UserResolver {
     @FbUID() firebaseUid: string,
   ): Promise<Users> {
     try {
+      this.logger.log("Create user arg:", user);
       const { firstName, lastName, languageCode } = user;
 
       const fbUser = await this.firebaseAuth.getUser(firebaseUid);
@@ -99,6 +100,7 @@ export class UserResolver {
       newUser.email = fbUser.email;
       newUser.userType = UserType.USER;
       newUser.language = languageCode;
+      this.logger.log("Create user output:", user);
 
       const u = await this.usersRepository.save(newUser);
 
@@ -110,7 +112,8 @@ export class UserResolver {
       return u;
     } catch (err) {
       this.logger.error(err);
-      throw Error(err);
+
+      throw err;
     }
   }
 }
