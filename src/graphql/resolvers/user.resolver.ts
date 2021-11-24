@@ -76,7 +76,6 @@ export class UserResolver {
     @FbUID() firebaseUid: string,
   ): Promise<Users> {
     try {
-      this.logger.log("Create user arg:", user);
       const { firstName, lastName, languageCode } = user;
 
       const fbUser = await this.firebaseAuth.getUser(firebaseUid);
@@ -100,7 +99,6 @@ export class UserResolver {
       newUser.email = fbUser.email;
       newUser.userType = UserType.USER;
       newUser.language = languageCode;
-      this.logger.log("Create user output:", user);
 
       const u = await this.usersRepository.save(newUser);
 
@@ -113,6 +111,14 @@ export class UserResolver {
     } catch (err) {
       this.logger.error(err);
 
+      try {
+        // If error and user already exists, remove from firebase
+        const fbUser = await this.firebaseAuth.getUser(firebaseUid);
+
+        if (fbUser) {
+          await this.firebaseAuth.deleteUser(fbUser.uid);
+        }
+      } catch (err) {}
       throw err;
     }
   }
