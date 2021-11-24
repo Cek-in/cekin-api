@@ -89,7 +89,7 @@ export class UserResolver {
       });
 
       if (userExists) {
-        throw new Error("User already registered");
+        throw new Error("User already exists");
       }
 
       const newUser = new Users();
@@ -110,15 +110,6 @@ export class UserResolver {
       return u;
     } catch (err) {
       this.logger.error(err);
-
-      try {
-        // If error and user already exists, remove from firebase
-        const fbUser = await this.firebaseAuth.getUser(firebaseUid);
-
-        if (fbUser) {
-          await this.firebaseAuth.deleteUser(fbUser.uid);
-        }
-      } catch (err) {}
       throw err;
     }
   }
