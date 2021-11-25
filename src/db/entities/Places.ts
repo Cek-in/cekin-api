@@ -25,4 +25,14 @@ export class Places {
 
   @OneToMany(() => CheckIns, (checkIn) => checkIn.placeId)
   checkIns: CheckIns[];
+
+  @Column("int", {
+    name: "place_type_id",
+  })
+  placeTypeId: number;
+
+  @Column("int", {
+    name: "parent_id",
+  })
+  parentId: number;
 }

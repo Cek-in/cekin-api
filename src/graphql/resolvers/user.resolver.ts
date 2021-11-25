@@ -32,6 +32,32 @@ export class UserResolver {
     return user;
   }
 
+  @Mutation("resetPassword")
+  async resetPassword(@Args("email") email: string) {
+    try {
+      const pwdResetLink = await this.firebaseAuth.generatePasswordResetLink(
+        email,
+      );
+
+      if (!pwdResetLink) {
+        throw new Error("Firebase generate pwd reset link failed");
+      }
+
+      const user = await this.usersRepository.findOne({
+        where: { email },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      await this.mailService.sendResetPasswordMail(user, pwdResetLink);
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+
   @UseGuards(FbUidGuard)
   @UseGuards(UserGuard)
   @Mutation("editUser")

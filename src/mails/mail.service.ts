@@ -8,6 +8,26 @@ export class MailService {
 
   constructor(private readonly mailerService: MailerService) {}
 
+  async sendResetPasswordMail(user: Users, resetUrl: string) {
+    try {
+      this.logger.log(`Sending pwd reset mail to ${user.email}`);
+      await this.mailerService.sendMail({
+        to: user.email,
+        from: "neodpovidejte@cekin.cz",
+        subject: "Žádost o obnovu hesla",
+        template: __dirname + `/../resources/mails/resetpwd.hbs`,
+        // template: "reg",
+        context: {
+          link: resetUrl,
+          fullName: user.fullName,
+        },
+      });
+      this.logger.log(`Pwd reset mail sent to ${user.email}`);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
   async sendConfirmationMail(user: Users, confirmationLink: string) {
     try {
       this.logger.log(`Sending confirmation mail to ${user.email}`);

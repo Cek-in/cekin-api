@@ -11,6 +11,7 @@ import { Users } from "./db/entities/Users";
 import { MailModule } from "./mails/mail.module";
 import { Places } from "./db/entities/Places";
 import { CheckIns } from "./db/entities/CheckIn";
+import { QrCodes } from "./db/entities/QrCodes";
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { CheckIns } from "./db/entities/CheckIn";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Users, Places, CheckIns],
+      entities: [Users, Places, CheckIns, QrCodes],
       //synchronize: true,
     }),
     GraphQLModule.forRoot({

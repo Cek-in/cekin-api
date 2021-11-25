@@ -57,4 +57,8 @@ export class Users {
     name: "language",
   })
   language: LanguageType;
+
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

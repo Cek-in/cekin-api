@@ -1,13 +1,15 @@
 type Query {
-  getHello: String!
+  getHello: String
   user: User
   userCheckIns: [CheckIn]
+  place(qrValue: String!): Place
 }
 
 type Mutation {
-  createUser(user: CreateUserInput): User
-  editUser(user: EditUserInput): User
-  checkIn: Boolean
+  createUser(user: CreateUserInput!): User
+  editUser(user: EditUserInput!): User
+  resetPassword(email: String!): Boolean
+  checkIn(qrValue: String): Boolean
 }
 
 type User {

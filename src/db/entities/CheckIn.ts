@@ -39,12 +39,12 @@ export class CheckIns {
   @JoinColumn([{ name: "place_id", referencedColumnName: "id" }])
   place: Places;
 
-  @Column("date", {
+  @Column("timestamptz", {
     name: "check_out_time",
   })
   checkOutTime: Date;
 
-  @Column("date", {
+  @Column("timestamptz", {
     name: "check_in_time",
   })
   checkInTime: Date;
