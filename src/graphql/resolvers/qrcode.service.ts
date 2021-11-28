@@ -10,7 +10,7 @@ export class QrCodeService {
   // 0     1      2          3          4              5             6
   //cekin:qr:<qr created>:<qr hash>:<place latitude>:<qr printed>:<place longitude>
   private readonly qrRegex =
-    /(cekin):(qr:[0-9]{10}):([A-Za-z0-9]{30}):(\d+\.?\d*):([0-9]{10}):((-|)+\d+\.?\d*)\w/;
+    /(cekin):(qr:[0-9]{13}):([A-Za-z0-9]{30}):(\d+\.?\d*):([0-9]{13}):((-|)+\d+\.?\d*)\w/;
 
   constructor(
     @InjectRepository(Places)
@@ -62,7 +62,8 @@ export class QrCodeService {
   };
 
   extractQRHash = (qrCode: string): string => {
-    const match = this.qrRegex.exec(qrCode);
+    const match = this.qrRegex.exec(qrCode.trim());
+
     if (match) {
       const qrValue = match[0];
       return qrValue.split(":")[3];

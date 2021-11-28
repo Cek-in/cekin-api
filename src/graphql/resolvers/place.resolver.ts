@@ -35,6 +35,8 @@ export class PlaceResolver {
         where: { id: qrCode.parentPlaceId },
       });
 
+      console.log(place);
+
       return place;
     } catch (err) {
       this.logger.error(err);
