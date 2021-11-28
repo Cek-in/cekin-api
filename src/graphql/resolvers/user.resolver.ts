@@ -138,4 +138,37 @@ export class UserResolver {
       throw err;
     }
   }
+
+  @UseGuards(FbUidGuard)
+  @Mutation("resendVerificationEmail")
+  async resendVerificationEmail(@FbUID() firebaseUid: string) {
+    try {
+      const fbUser = await this.firebaseAuth.getUser(firebaseUid);
+
+      if (!fbUser) {
+        throw new Error("User not registered on firebase");
+      }
+
+      if (fbUser.emailVerified) {
+        throw new Error("User already verified");
+      }
+
+      const user = await this.usersRepository.findOne({
+        where: { firebaseId: firebaseUid },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const confirmUrl = await this.firebaseAuth.generateEmailVerificationLink(
+        fbUser.email,
+      );
+
+      await this.mailService.sendConfirmationMail(user, confirmUrl);
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
 }

@@ -10,6 +10,7 @@ type Mutation {
   editUser(user: EditUserInput!): User
   resetPassword(email: String!): Boolean
   checkIn(qrValue: String): Boolean
+  resendVerificationEmail: Boolean
 }
 
 type User {
