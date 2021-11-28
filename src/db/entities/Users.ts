@@ -53,7 +53,7 @@ export class Users {
   })
   language: LanguageType;
 
-  @Column("timestamp", {
+  @Column("timestamptz", {
     name: "created",
   })
   created: Date;

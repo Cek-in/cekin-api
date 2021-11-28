@@ -20,6 +20,8 @@ export class CheckInResolver {
     private readonly placesRepository: Repository<Places>,
     @InjectRepository(QrCodes)
     private readonly qrCodesRepository: Repository<QrCodes>,
+    @InjectRepository(CheckIns)
+    private readonly checkInsRepository: Repository<CheckIns>,
     private readonly qrCodeService: QrCodeService,
   ) {}
 
@@ -55,7 +57,7 @@ export class CheckInResolver {
       newCheckIn.placeId = place.id;
       newCheckIn.checkInTime = new Date();
 
-      await this.placesRepository.save(newCheckIn);
+      await this.checkInsRepository.save(newCheckIn);
 
       return true;
     } catch (error) {
