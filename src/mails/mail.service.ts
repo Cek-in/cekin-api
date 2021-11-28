@@ -19,7 +19,7 @@ export class MailService {
         // template: "reg",
         context: {
           link: resetUrl,
-          fullName: user.fullName,
+          fullName: user.firstName,
         },
       });
       this.logger.log(`Pwd reset mail sent to ${user.email}`);
@@ -39,7 +39,7 @@ export class MailService {
         // template: "reg",
         context: {
           link: confirmationLink,
-          fullName: `${user.firstName} ${user.lastName}`,
+          fullName: `${user.firstName}`,
         },
         // html: `<h1>Potvrzení registrace</h1>
         // <p>Děkujeme za registraci na našem webu. Pro dokončení registrace klikněte na následující odkaz:</p>

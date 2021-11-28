@@ -69,13 +69,12 @@ export class UserResolver {
       throw Error("User was not found");
     }
 
-    const { firstName, lastName, email, phone } = updated;
+    const { firstName, email, phone } = updated;
 
     const usr = await this.usersRepository.findOne(user.id);
 
     if (usr) {
       usr.firstName = firstName;
-      usr.lastName = lastName;
       usr.email = email;
       usr.phone = phone;
 
@@ -102,7 +101,7 @@ export class UserResolver {
     @FbUID() firebaseUid: string,
   ): Promise<Users> {
     try {
-      const { firstName, lastName, languageCode } = user;
+      const { firstName, languageCode } = user;
 
       const fbUser = await this.firebaseAuth.getUser(firebaseUid);
 
@@ -121,10 +120,10 @@ export class UserResolver {
       const newUser = new Users();
       newUser.firebaseId = fbUser.uid;
       newUser.firstName = firstName;
-      newUser.lastName = lastName;
       newUser.email = fbUser.email;
       newUser.userType = UserType.USER;
       newUser.language = languageCode;
+      newUser.created = new Date();
 
       const u = await this.usersRepository.save(newUser);
 

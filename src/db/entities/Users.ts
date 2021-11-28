@@ -21,11 +21,6 @@ export class Users {
   firstName: string;
 
   @Column("varchar", {
-    name: "surname",
-  })
-  lastName: string;
-
-  @Column("varchar", {
     name: "email",
     nullable: false,
   })
@@ -58,7 +53,8 @@ export class Users {
   })
   language: LanguageType;
 
-  get fullName(): string {
-    return `${this.firstName} ${this.lastName}`;
-  }
+  @Column("timestamp", {
+    name: "created",
+  })
+  created: Date;
 }
