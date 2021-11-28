@@ -11,9 +11,9 @@ import { User } from "../decorators/user.decorator";
 import { UserGuard } from "../guards/gql/user.guard";
 import { QrCodeService } from "./qrcode.service";
 
-@Resolver("checkin")
-export class TestResolver {
-  private readonly logger = new Logger(TestResolver.name);
+@Resolver("CheckIn")
+export class CheckInResolver {
+  private readonly logger = new Logger(CheckInResolver.name);
 
   constructor(
     @InjectRepository(Places)

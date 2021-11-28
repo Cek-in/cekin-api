@@ -67,7 +67,7 @@ export class UserGuard implements CanActivate {
       }
     } catch (error) {
       this.logger.error(error);
-      return null;
+      throw error;
     }
   }
 }
