@@ -9,6 +9,7 @@ import { extractQRHash } from "src/types/qrcodes";
 import { Repository } from "typeorm";
 import { User } from "../decorators/user.decorator";
 import { UserGuard } from "../guards/gql/user.guard";
+import { QrCodeService } from "./qrcode.service";
 
 @Resolver("checkin")
 export class TestResolver {
@@ -19,6 +20,7 @@ export class TestResolver {
     private readonly placesRepository: Repository<Places>,
     @InjectRepository(QrCodes)
     private readonly qrCodesRepository: Repository<QrCodes>,
+    private readonly qrCodeService: QrCodeService,
   ) {}
 
   @UseGuards(UserGuard)
@@ -30,7 +32,7 @@ export class TestResolver {
     this.logger.log("CheckIn");
 
     try {
-      const qrHash = extractQRHash(qrValue);
+      const qrHash = this.qrCodeService.extractQRHash(qrValue);
 
       const qrCode = await this.qrCodesRepository.findOne({
         where: { hash: qrHash },
