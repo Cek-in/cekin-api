@@ -1,11 +1,10 @@
 import { Logger, UseGuards } from "@nestjs/common";
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CheckIns } from "src/db/entities/CheckIn";
 import { Places } from "src/db/entities/Places";
 import { QrCodes } from "src/db/entities/QrCodes";
 import { Users } from "src/db/entities/Users";
-import { extractQRHash } from "src/types/qrcodes";
 import { Repository } from "typeorm";
 import { User } from "../decorators/user.decorator";
 import { UserGuard } from "../guards/gql/user.guard";

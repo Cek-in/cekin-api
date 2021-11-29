@@ -11,3 +11,9 @@ export interface IEditUser {
 }
 
 export type LanguageType = "en" | "cs" | string;
+
+export interface ICheckInSummary {
+  id: number;
+  placeId: number;
+  count: number;
+}

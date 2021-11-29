@@ -35,4 +35,14 @@ export class Places {
     name: "parent_id",
   })
   parentId: number;
+
+  @Column("float", {
+    name: "latitude",
+  })
+  latitude: number;
+
+  @Column("float", {
+    name: "longitude",
+  })
+  longitude: number;
 }

@@ -37,6 +37,7 @@ import { QrCodes } from "./db/entities/QrCodes";
       // },
       // playground: true,
       introspection: true,
+
       plugins: [],
     }),
     GQLModule,

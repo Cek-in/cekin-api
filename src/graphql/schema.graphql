@@ -1,7 +1,10 @@
+scalar Date
+
 type Query {
   getHello: String
-  user: User
-  userCheckIns: [CheckIn]
+  user: User!
+  ownCheckIns: [CheckIn!]
+  checkInSummary: [CheckInSummary!]!
   place(qrValue: String!): Place
 }
 
@@ -16,25 +19,34 @@ type Mutation {
 type User {
   id: ID!
   firstName: String!
-  lastName: String!
   email: String!
   phone: String
   userType: String!
-  checkIns: [CheckIn]
+  checkIns: [CheckIn!]
 }
 
 type Place {
   id: ID!
   name: String!
-  checkIns: [CheckIn]
+  checkIns: [CheckIn!]
+  latitude: Float!
+  longitude: Float!
 }
 
 type CheckIn {
   id: ID!
   user: User!
+  placeId: ID!
   place: Place!
-  checkInTime: String!
-  checkOutTime: String
+  checkInTime: Date!
+  checkOutTime: Date
+}
+
+type CheckInSummary {
+  id: ID!
+  placeId: ID!
+  place: Place!
+  count: Int!
 }
 
 input CreateUserInput {
