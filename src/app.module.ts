@@ -12,6 +12,8 @@ import { MailModule } from "./mails/mail.module";
 import { Places } from "./db/entities/Places";
 import { CheckIns } from "./db/entities/CheckIn";
 import { QrCodes } from "./db/entities/QrCodes";
+import { ScheduleModule } from "@nestjs/schedule";
+import { SchedulerModule } from "./scheduler/scheduler.module";
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { QrCodes } from "./db/entities/QrCodes";
       },
       plugins: [],
     }),
+    ScheduleModule.forRoot(),
+    SchedulerModule,
     GQLModule,
     FirebaseAdminModule.forRootAsync({
       useFactory: () => ({
