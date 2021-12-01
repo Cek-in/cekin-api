@@ -31,6 +31,7 @@
     "@nestjs/typeorm": "^8.0.2",
     "apollo-server-express": "^3.5.0",
     "graphql": "^15",
+    "graphql-ws": "^5.5.5",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "nodemailer": "^6.7.1",

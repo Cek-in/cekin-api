@@ -37,7 +37,10 @@ import { QrCodes } from "./db/entities/QrCodes";
       // },
       // playground: true,
       introspection: true,
-
+      // installSubscriptionHandlers: true,
+      subscriptions: {
+        "graphql-ws": true,
+      },
       plugins: [],
     }),
     GQLModule,

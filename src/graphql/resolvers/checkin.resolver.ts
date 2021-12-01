@@ -1,5 +1,5 @@
 import { Logger, UseGuards } from "@nestjs/common";
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CheckIns } from "src/db/entities/CheckIn";
 import { Places } from "src/db/entities/Places";
@@ -23,6 +23,12 @@ export class CheckInResolver {
     private readonly checkInsRepository: Repository<CheckIns>,
     private readonly qrCodeService: QrCodeService,
   ) {}
+
+  @UseGuards(UserGuard)
+  @Query("ownCheckIns")
+  async ownCheckIns(@User() user: Users): Promise<CheckIns[]> {
+    return this.checkInsRepository.find({ where: { userId: user.id } });
+  }
 
   @UseGuards(UserGuard)
   @Mutation("checkIn")
