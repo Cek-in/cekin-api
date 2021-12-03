@@ -13,6 +13,11 @@ export class SchedulerService {
     private readonly checkInsRepository: Repository<CheckIns>,
   ) {}
 
+  // add hours to date
+  private addHours(date: Date, hours: number) {
+    return new Date(date.getTime() + hours * 60 * 60 * 1000);
+  }
+
   // remove check in records older than 14 days
   @Cron("0 1 * * *")
   async removeOldCheckInRecords() {
@@ -25,6 +30,34 @@ export class SchedulerService {
       });
       this.logger.log(`removing ${oldRecords.length} old check in records`);
       await this.checkInsRepository.remove(oldRecords);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  // close check in records
+  @Cron("0 * * * *")
+  async closeCheckInRecords() {
+    try {
+      const unclosedCheckins = await this.checkInsRepository.find({
+        where: {
+          checkOutTime: null,
+        },
+        relations: ["place", "place.placeType"],
+      });
+
+      const updated: CheckIns[] = [];
+
+      for (const checkIn of unclosedCheckins) {
+        const checkInDate = new Date(checkIn.checkInTime);
+        const checkOutDate = this.addHours(
+          checkInDate,
+          checkIn.place.placeType.autoCheckoutAfter,
+        );
+        checkIn.checkOutTime = checkOutDate;
+        updated.push(checkIn);
+      }
+      await this.checkInsRepository.save(updated);
     } catch (error) {
       this.logger.error(error);
     }

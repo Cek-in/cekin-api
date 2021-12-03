@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { CheckIns } from "./CheckIn";
+import { PlaceTypes } from "./PlaceTypes";
 import { Users } from "./Users";
 
 @Entity("places")
@@ -30,6 +31,13 @@ export class Places {
     name: "place_type_id",
   })
   placeTypeId: number;
+
+  @ManyToOne(() => PlaceTypes, (placeType) => placeType.places, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "place_type_id", referencedColumnName: "id" }])
+  placeType: PlaceTypes;
 
   @Column("int", {
     name: "parent_id",

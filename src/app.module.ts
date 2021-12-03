@@ -14,6 +14,7 @@ import { CheckIns } from "./db/entities/CheckIn";
 import { QrCodes } from "./db/entities/QrCodes";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
+import { PlaceTypes } from "./db/entities/PlaceTypes";
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { SchedulerModule } from "./scheduler/scheduler.module";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Users, Places, CheckIns, QrCodes],
+      entities: [Users, Places, CheckIns, QrCodes, PlaceTypes],
       //synchronize: true,
     }),
     GraphQLModule.forRoot({

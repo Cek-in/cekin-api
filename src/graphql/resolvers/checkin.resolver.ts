@@ -72,6 +72,22 @@ export class CheckInResolver {
         throw new Error("Place not found");
       }
 
+      // Attempt close previous checkIn
+      const previousUserCheckIn = await this.checkInsRepository.findOne({
+        where: {
+          userId: user.id,
+          checkOutTime: null,
+        },
+        order: {
+          checkInTime: "DESC",
+        },
+      });
+
+      if (!previousUserCheckIn.checkOutTime) {
+        previousUserCheckIn.checkOutTime = new Date();
+        await this.checkInsRepository.save(previousUserCheckIn);
+      }
+
       const newCheckIn = new CheckIns();
       newCheckIn.userId = user.id;
       newCheckIn.placeId = place.id;
