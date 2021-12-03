@@ -34,7 +34,10 @@ export class CheckInResolver {
   @UseGuards(UserGuard)
   @Query("ownCheckIns")
   async ownCheckIns(@User() user: Users): Promise<CheckIns[]> {
-    return await this.checkInsRepository.find({ where: { userId: user.id } });
+    return await this.checkInsRepository.find({
+      where: { userId: user.id },
+      order: { checkInTime: "DESC" },
+    });
   }
 
   @ResolveField("place")
