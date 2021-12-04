@@ -48,12 +48,21 @@ export class SchedulerService {
 
       const updated: CheckIns[] = [];
 
+      const now = new Date();
+
       for (const checkIn of unclosedCheckins) {
         const checkInDate = new Date(checkIn.checkInTime);
+
         const checkOutDate = this.addHours(
           checkInDate,
           checkIn.place.placeType.autoCheckoutAfter,
         );
+
+        // ignore if current time is before potential checkout
+        if (checkOutDate < now) {
+          continue;
+        }
+
         checkIn.checkOutTime = checkOutDate;
         updated.push(checkIn);
       }
