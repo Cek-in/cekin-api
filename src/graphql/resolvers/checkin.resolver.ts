@@ -53,6 +53,34 @@ export class CheckInResolver {
   ): Promise<boolean> {
     this.logger.log("CheckIn");
 
+    // check whether user has chekced in last 5 minutes and throw an error
+    const recentCheckIn = await this.checkInsRepository.findOne({
+      where: {
+        userId: user.id,
+        checkInTime: {
+          $gt: new Date(new Date().getTime() - 5 * 60 * 1000),
+        },
+      },
+    });
+
+    if (recentCheckIn) {
+      throw new Error("Checking in too often");
+    }
+
+    // check wheter user has more than 20 checkins in last 24 hours and throw an error
+    const checkInCount = await this.checkInsRepository.count({
+      where: {
+        userId: user.id,
+        checkInTime: {
+          $gt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+
+    if (checkInCount > 20) {
+      throw new Error("Check in cap for today reached");
+    }
+
     try {
       const qrHash = this.qrCodeService.extractQRHash(qrValue);
 

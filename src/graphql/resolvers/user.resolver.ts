@@ -7,7 +7,7 @@ import { Places } from "src/db/entities/Places";
 import { Users } from "src/db/entities/Users";
 import { MailService } from "src/mails/mail.service";
 import { UserType } from "src/types/enums";
-import { ICreateUser, IEditUser } from "src/types/types";
+import { ICreateUser, IEditUser, LanguageType } from "src/types/types";
 import { Repository } from "typeorm";
 import { FbUID, User } from "../decorators/user.decorator";
 import { FbUidGuard } from "../guards/gql/fb-uid.guard";
@@ -33,7 +33,10 @@ export class UserResolver {
   }
 
   @Mutation("resetPassword")
-  async resetPassword(@Args("email") email: string) {
+  async resetPassword(
+    @Args("email") email: string,
+    @FbUID() firebaseUid: string,
+  ) {
     try {
       const pwdResetLink = await this.firebaseAuth.generatePasswordResetLink(
         email,
@@ -43,15 +46,25 @@ export class UserResolver {
         throw new Error("Firebase generate pwd reset link failed");
       }
 
+      const fbUser = await this.firebaseAuth.getUser(firebaseUid);
+
+      if (!fbUser) {
+        throw new Error("User not registered on firebase");
+      }
+
       const user = await this.usersRepository.findOne({
-        where: { email },
+        where: { firebaseId: firebaseUid },
       });
 
       if (!user) {
         throw new Error("User not found");
       }
 
-      await this.mailService.sendResetPasswordMail(user, pwdResetLink);
+      await this.mailService.sendResetPasswordMail(
+        email,
+        user.language,
+        pwdResetLink,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -63,20 +76,16 @@ export class UserResolver {
   @Mutation("editUser")
   async editUser(
     @User() user: Users,
-    @Args("user") updated: IEditUser,
+    @Args("languageCode") languageCode: LanguageType,
   ): Promise<Users> {
     if (!user) {
       throw Error("User was not found");
     }
 
-    const { firstName, email, phone } = updated;
-
     const usr = await this.usersRepository.findOne(user.id);
 
     if (usr) {
-      usr.firstName = firstName;
-      usr.email = email;
-      usr.phone = phone;
+      usr.language = languageCode;
 
       await this.usersRepository.save(usr);
       return usr;
@@ -97,12 +106,10 @@ export class UserResolver {
   @UseGuards(FbUidGuard)
   @Mutation("createUser")
   async createUser(
-    @Args("user") user: ICreateUser,
+    @Args("languageCode") languageCode: LanguageType,
     @FbUID() firebaseUid: string,
   ): Promise<Users> {
     try {
-      const { firstName, languageCode } = user;
-
       const fbUser = await this.firebaseAuth.getUser(firebaseUid);
 
       if (!fbUser) {
@@ -119,8 +126,6 @@ export class UserResolver {
 
       const newUser = new Users();
       newUser.firebaseId = fbUser.uid;
-      newUser.firstName = firstName;
-      newUser.email = fbUser.email;
       newUser.userType = UserType.USER;
       newUser.language = languageCode;
       newUser.created = new Date();
@@ -131,7 +136,11 @@ export class UserResolver {
         fbUser.email,
       );
 
-      await this.mailService.sendConfirmationMail(u, confirmUrl);
+      await this.mailService.sendConfirmationMail(
+        fbUser.email,
+        languageCode,
+        confirmUrl,
+      );
       return u;
     } catch (err) {
       this.logger.error(err);
@@ -165,7 +174,11 @@ export class UserResolver {
         fbUser.email,
       );
 
-      await this.mailService.sendConfirmationMail(user, confirmUrl);
+      await this.mailService.sendConfirmationMail(
+        fbUser.email,
+        user.language,
+        confirmUrl,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;

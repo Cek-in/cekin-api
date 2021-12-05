@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Users } from "src/db/entities/Users";
+import { LanguageType } from "src/types/types";
 
 @Injectable()
 export class MailService {
@@ -8,44 +9,46 @@ export class MailService {
 
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendResetPasswordMail(user: Users, resetUrl: string) {
+  async sendResetPasswordMail(
+    email: string,
+    langCode: LanguageType,
+    resetUrl: string,
+  ) {
     try {
-      this.logger.log(`Sending pwd reset mail to ${user.email}`);
       await this.mailerService.sendMail({
-        to: user.email,
+        to: email,
         from: "neodpovidejte@cekin.cz",
         subject: "Žádost o obnovu hesla",
         template: __dirname + `/../resources/mails/resetpwd.hbs`,
         // template: "reg",
         context: {
           link: resetUrl,
-          fullName: user.firstName,
         },
       });
-      this.logger.log(`Pwd reset mail sent to ${user.email}`);
     } catch (error) {
       this.logger.error(error);
     }
   }
 
-  async sendConfirmationMail(user: Users, confirmationLink: string) {
+  async sendConfirmationMail(
+    email: string,
+    langCode: LanguageType,
+    confirmationLink: string,
+  ) {
     try {
-      this.logger.log(`Sending confirmation mail to ${user.email}`);
       await this.mailerService.sendMail({
-        to: user.email,
+        to: email,
         from: "neodpovidejte@cekin.cz",
         subject: "Potvrzení registrace",
         template: __dirname + `/../resources/mails/reg.hbs`,
         // template: "reg",
         context: {
           link: confirmationLink,
-          fullName: `${user.firstName}`,
         },
         // html: `<h1>Potvrzení registrace</h1>
         // <p>Děkujeme za registraci na našem webu. Pro dokončení registrace klikněte na následující odkaz:</p>
         // <a href="{{link}}">Potvrdit registraci</a>`,
       });
-      this.logger.log(`Confirmation mail sent to ${user.email}`);
     } catch (error) {
       this.logger.error(error);
     }

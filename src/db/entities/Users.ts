@@ -16,24 +16,6 @@ export class Users {
   id: number;
 
   @Column("varchar", {
-    name: "forename",
-  })
-  firstName: string;
-
-  @Column("varchar", {
-    name: "email",
-    nullable: false,
-  })
-  email: string;
-
-  @Column("varchar", {
-    name: "phone",
-    nullable: true,
-    length: 15,
-  })
-  phone: string;
-
-  @Column("varchar", {
     name: "firebase_id",
     nullable: false,
   })
