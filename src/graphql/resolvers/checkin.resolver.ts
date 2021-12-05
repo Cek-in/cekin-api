@@ -83,7 +83,7 @@ export class CheckInResolver {
         },
       });
 
-      if (!previousUserCheckIn.checkOutTime) {
+      if (previousUserCheckIn && !previousUserCheckIn.checkOutTime) {
         previousUserCheckIn.checkOutTime = new Date();
         await this.checkInsRepository.save(previousUserCheckIn);
       }
