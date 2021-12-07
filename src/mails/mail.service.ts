@@ -18,8 +18,10 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email,
         from: "neodpovidejte@cekin.cz",
-        subject: "Žádost o obnovu hesla",
-        template: __dirname + `/../resources/mails/resetpwd.hbs`,
+        subject: `[Čekin] ${
+          langCode === "cs" ? "Žádost o obnovu hesla" : "Password reset"
+        }`,
+        template: __dirname + `/../resources/mails/resetpwd-${langCode}.hbs`,
         // template: "reg",
         context: {
           link: resetUrl,
@@ -39,8 +41,10 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email,
         from: "neodpovidejte@cekin.cz",
-        subject: "Potvrzení registrace",
-        template: __dirname + `/../resources/mails/reg.hbs`,
+        subject: `[Čekin] ${
+          langCode === "cs" ? "Potvrzení účtu" : "Verify your account"
+        }`,
+        template: __dirname + `/../resources/mails/reg-${langCode}.hbs`,
         // template: "reg",
         context: {
           link: confirmationLink,

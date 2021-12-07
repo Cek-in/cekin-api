@@ -4,7 +4,6 @@ import { ConfigModule } from "@nestjs/config";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { MailService } from "./mail.service";
 import { MailController } from "./mail.controller";
-import * as path from "path";
 
 @Module({
   imports: [
@@ -28,7 +27,15 @@ import * as path from "path";
       template: {
         // dir: path.resolve("./resources/mail/"),
         dir: __dirname + "/../resources/mails/",
-        adapter: new HandlebarsAdapter(),
+        adapter: new HandlebarsAdapter(undefined, {
+          inlineCssEnabled: true,
+          inlineCssOptions: {
+            url: " ",
+            preserveMediaQueries: true,
+            applyStyleTags: true,
+          },
+        }),
+
         options: {
           strict: true,
         },
