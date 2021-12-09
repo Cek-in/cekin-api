@@ -4,6 +4,10 @@
   "compilerOptions": {
     "assets": [
       {
+        "include": "resources/pdf/*",
+        "outDir": "dist"
+      },
+      {
         "include": "resources/mails/*.hbs",
         "outDir": "dist"
       }

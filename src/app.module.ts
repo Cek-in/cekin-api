@@ -15,6 +15,7 @@ import { QrCodes } from "./db/entities/QrCodes";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
 import { PlaceTypes } from "./db/entities/PlaceTypes";
+import { QrModule } from "./qr/qr.module";
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { PlaceTypes } from "./db/entities/PlaceTypes";
       }),
     }),
     MailModule,
+    QrModule,
   ],
   controllers: [AppController],
   providers: [AppService],
