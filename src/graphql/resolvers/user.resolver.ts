@@ -103,7 +103,6 @@ export class UserResolver {
     return checkIns;
   }
 
-  @UseGuards(FbUidGuard)
   @Mutation("createUser")
   async createUser(
     @Args("languageCode") languageCode: LanguageType,
