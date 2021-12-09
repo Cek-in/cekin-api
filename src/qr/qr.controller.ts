@@ -15,7 +15,7 @@ export class QrController {
   @Get(":hash")
   @Header("Content-Type", "application/pdf")
   @Header("Content-Disposition", "inline;filename='CekinQr.pdf'")
-  @Header("Cache-Control", "public, max-age=3600")
+  //@Header("Cache-Control", "public, max-age=3600")
   async getPdf(@Param("hash") hash: string) {
     try {
       const r = await this.qrService.resolveQR(hash);

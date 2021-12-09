@@ -5,7 +5,6 @@ import { Places } from "src/db/entities/Places";
 import * as path from "path";
 import * as SVGtoPDF from "svg-to-pdfkit";
 import { pdfSvg } from "./svg";
-import { TextOptions } from "hummus-recipe";
 import { QrCodes } from "src/db/entities/QrCodes";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -88,7 +87,6 @@ export class QrService {
 
     if (!qr) {
       return null;
-      throw new Error("QR code not found");
     }
 
     const pdf = await this.getPdfDesign2(qr);
@@ -139,12 +137,9 @@ export class QrService {
 
         const name = qr.place.name;
 
-        const tOpts: TextOptions = {
-          size: 32,
-          font: "Nunito",
-        };
+        const tOpts = {};
 
-        const nWidth = doc.widthOfString(name, tOpts);
+        const nWidth = doc.fontSize(22).widthOfString(name, tOpts);
         doc.text(
           name,
           doc.page.width / 2 - nWidth / 2,
