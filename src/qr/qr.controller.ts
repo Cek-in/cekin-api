@@ -24,6 +24,8 @@ export class QrController {
         throw new NotFoundException();
       }
 
+      console.log(r.length);
+
       return new StreamableFile(r);
     } catch (e) {
       return new NotFoundException(e);

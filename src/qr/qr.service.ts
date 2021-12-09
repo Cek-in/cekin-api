@@ -8,6 +8,10 @@ import { pdfSvg } from "./svg";
 import { QrCodes } from "src/db/entities/QrCodes";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+const labelmake = require("labelmake");
+import { Template } from "labelmake/dist/types/type";
+import * as fs from "fs";
+import template from "./templ";
 
 @Injectable()
 export class QrService {
@@ -77,6 +81,38 @@ export class QrService {
   //     return pdfBuffer;
   //   }
 
+  async genPDF(qr: QrCodes): Promise<Buffer> {
+    this.logger.log("Generating QR code");
+    try {
+      const Nunito = fs.readFileSync(
+        path.join(__dirname, "/../resources/pdf/Nunito-Regular.ttf"),
+      );
+
+      const font = { Nunito };
+
+      const t: Template = {
+        ...template,
+        fontName: "Nunito",
+      };
+
+      const inputs = [{ qrscan: "aa", venueName: "aaaaaaaaaaaa" }];
+
+      const pdf = await labelmake({
+        template: t,
+        inputs,
+        font,
+      });
+
+      const ab = pdf.buffer as ArrayBuffer;
+      const arr1 = [];
+
+      return Buffer.concat(arr1);
+    } catch (err) {
+      this.logger.error(err);
+      return null;
+    }
+  }
+
   async resolveQR(qrHash: string): Promise<Buffer> {
     const qr = await this.qrCodesRepository.findOne({
       where: {
@@ -89,7 +125,7 @@ export class QrService {
       return null;
     }
 
-    const pdf = await this.getPdfDesign2(qr);
+    const pdf = await this.genPDF(qr);
     return pdf;
   }
 
