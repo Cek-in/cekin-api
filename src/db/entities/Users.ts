@@ -1,3 +1,4 @@
+import { PotentialCovid } from "src/types/enums";
 import { LanguageType } from "src/types/types";
 import {
   Column,
@@ -39,4 +40,34 @@ export class Users {
     name: "created",
   })
   created: Date;
+
+  @Column("timestamptz", {
+    name: "covid_traced",
+    nullable: true,
+  })
+  covidTraced: Date;
+
+  get potentialCovid(): PotentialCovid {
+    if (!this.covidTraced) return PotentialCovid.NONE;
+
+    const cTraced = new Date(this.covidTraced).getTime();
+
+    const now = Date.now();
+    // if covidtraced within 2 days
+    if (cTraced > now - 2 * 24 * 60 * 60 * 1000) {
+      return PotentialCovid.SEVERE;
+    }
+
+    // if covidtraced within 7 days
+    if (cTraced > now - 7 * 24 * 60 * 60 * 1000) {
+      return PotentialCovid.MODERATE;
+    }
+
+    //if covidtraced within 14 days
+    if (cTraced > now - 14 * 24 * 60 * 60 * 1000) {
+      return PotentialCovid.LOW;
+    }
+
+    return PotentialCovid.NONE;
+  }
 }

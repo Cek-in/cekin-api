@@ -1,5 +1,12 @@
 scalar Date
 
+enum PotentialCovid {
+  SEVERE
+  MODERATE
+  LOW
+  NONE
+}
+
 type Query {
   getHello: String
   user: User!
@@ -20,6 +27,7 @@ type User {
   id: ID!
   userType: String!
   checkIns: [CheckIn!]
+  potentialCovid: PotentialCovid
 }
 
 type Place {

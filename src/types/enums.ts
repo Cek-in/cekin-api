@@ -4,3 +4,10 @@ export enum UserType {
   ADMIN = "ADMIN",
   USER = "USER",
 }
+
+export enum PotentialCovid {
+  SEVERE = "SEVERE",
+  MODERATE = "MODERATE",
+  LOW = "LOW",
+  NONE = "NONE",
+}
