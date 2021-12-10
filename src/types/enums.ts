@@ -11,3 +11,9 @@ export enum PotentialCovid {
   LOW = "LOW",
   NONE = "NONE",
 }
+
+export enum OwnCheckInDay {
+  TODAY = "TODAY",
+  YESTERDAY = "YESTERDAY",
+  OLDER = "OLDER",
+}

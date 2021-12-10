@@ -11,6 +11,7 @@ type Query {
   getHello: String
   user: User!
   ownCheckIns: [CheckIn!]
+  ownCheckInsDay(since: Date, to: Date): [CheckIn!]
   checkInSummary: [CheckInSummary!]!
   place(qrValue: String!): Place
 }

@@ -12,7 +12,8 @@ import { CheckIns } from "src/db/entities/CheckIn";
 import { Places } from "src/db/entities/Places";
 import { QrCodes } from "src/db/entities/QrCodes";
 import { Users } from "src/db/entities/Users";
-import { Repository } from "typeorm";
+import { OwnCheckInDay } from "src/types/enums";
+import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
 import { User } from "../decorators/user.decorator";
 import { UserGuard } from "../guards/gql/user.guard";
 import { QrCodeService } from "./qrcode.service";
@@ -37,6 +38,25 @@ export class CheckInResolver {
     return await this.checkInsRepository.find({
       where: { userId: user.id },
       order: { checkInTime: "DESC" },
+    });
+  }
+
+  @UseGuards(UserGuard)
+  @Query("ownCheckInsDay")
+  async ownCheckInsDay(
+    @User() user: Users,
+    @Args("since")
+    since: Date = new Date(new Date().getTime() - 14 * 24 * 60 * 60 * 1000),
+    @Args("to") until: Date = new Date(),
+  ): Promise<CheckIns[]> {
+    return await this.checkInsRepository.find({
+      where: {
+        userId: user.id,
+        checkInTime: Between(since, until),
+      },
+      order: {
+        checkInTime: "DESC",
+      },
     });
   }
 
