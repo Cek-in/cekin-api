@@ -32,16 +32,12 @@ export class QrController {
 
   @Get("value/:hash")
   async getQrValue(@Param("hash") hash: string) {
-    try {
-      const r = await this.qrService.resolveValue(hash);
+    const r = await this.qrService.resolveValue(hash);
 
-      if (!r) {
-        throw new NotFoundException();
-      }
-
-      return { value: r };
-    } catch (e) {
-      return new NotFoundException(e);
+    if (!r) {
+      throw new NotFoundException();
     }
+
+    return { value: r };
   }
 }
