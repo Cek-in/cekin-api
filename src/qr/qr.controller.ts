@@ -40,4 +40,9 @@ export class QrController {
 
     return { value: r };
   }
+
+  @Get("values")
+  async getHashes() {
+    return await this.qrService.getHashes();
+  }
 }

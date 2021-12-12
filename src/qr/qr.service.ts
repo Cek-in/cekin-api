@@ -28,6 +28,12 @@ export class QrService {
     "/../resources/pdf/design2.svg",
   );
 
+  async getHashes() {
+    const qr = await this.qrCodesRepository.find();
+
+    return qr.map((q) => q.hash);
+  }
+
   async resolveValue(hash: string) {
     const qr = await this.qrCodesRepository.findOne({
       where: {
