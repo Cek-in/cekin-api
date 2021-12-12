@@ -29,4 +29,19 @@ export class QrController {
   //     return new NotFoundException(e);
   //   }
   // }
+
+  @Get("value/:hash")
+  async getQrValue(@Param("hash") hash: string) {
+    try {
+      const r = await this.qrService.resolveValue(hash);
+
+      if (!r) {
+        throw new NotFoundException();
+      }
+
+      return { value: r };
+    } catch (e) {
+      return new NotFoundException(e);
+    }
+  }
 }

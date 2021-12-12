@@ -28,6 +28,26 @@ export class QrService {
     "/../resources/pdf/design2.svg",
   );
 
+  async resolveValue(hash: string) {
+    const qr = await this.qrCodesRepository.findOne({
+      where: {
+        hash,
+      },
+      relations: ["place"],
+    });
+
+    if (!qr) {
+      return null;
+    }
+
+    const now = new Date();
+    const unixTimestamp = now.getTime();
+    const qrCreated = new Date(qr.created);
+    const unixTimestampCreated = qrCreated.getTime();
+
+    return `${process.env.LANDING_URL}/get/cekin:qr:${unixTimestampCreated}:${qr.hash}:${qr.place.latitude}:${unixTimestamp}:${qr.place.longitude}`;
+  }
+
   //   async getPdf(): Promise<Buffer> {
   //     this.logger.log("Generating QR code");
 
